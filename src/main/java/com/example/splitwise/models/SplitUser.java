@@ -7,11 +7,13 @@ import java.util.List;
 
 @Data
 @Entity
-public class SplitUser{
+public class SplitUser {
     @Id
     @GeneratedValue
     @Column(name = "user_id")
     private int userId;
     private String email;
     private String name;
+    private String password;
+    private String roles;
 }

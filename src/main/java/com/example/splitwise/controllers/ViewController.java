@@ -2,6 +2,7 @@ package com.example.splitwise.controllers;
 
 import com.example.splitwise.models.ViewMoneyBalanceResponse;
 import com.example.splitwise.services.ViewService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ public class ViewController {
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ViewMoneyBalanceResponse getUserActivity(@PathVariable int userId){
         return viewService.getUserActivity(userId);
     }

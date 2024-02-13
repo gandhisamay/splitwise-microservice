@@ -4,6 +4,7 @@ package com.example.splitwise.controllers;
 import com.example.splitwise.models.SplitUser;
 import com.example.splitwise.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class UserController {
 
 
     @GetMapping(value = "/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<SplitUser>> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -36,6 +38,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable int id) {
         //now delete it using the repository;
         return userService.deleteUser(id);
