@@ -18,8 +18,9 @@ public class ViewController {
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public ViewMoneyBalanceResponse getUserActivity(@PathVariable int userId){
         return viewService.getUserActivity(userId);
     }
+
 }

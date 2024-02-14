@@ -11,6 +11,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +25,7 @@ import com.example.splitwise.services.UserAuthService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalAuthentication
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserRepository userRepository;
@@ -57,6 +58,7 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> {
             request.requestMatchers("/user/new").permitAll();
             request.requestMatchers("/user/new/many").permitAll();
+            request.requestMatchers("/user/**").authenticated();
             request.requestMatchers("/activity/**").authenticated();
             request.requestMatchers("/transaction/**").authenticated();
             request.requestMatchers("/settle/**").authenticated();

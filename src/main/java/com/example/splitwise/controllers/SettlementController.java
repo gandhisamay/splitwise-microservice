@@ -23,7 +23,7 @@ public class SettlementController {
 
 
     @PostMapping("/{payerId}/{receiverId}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> settleUsers(@PathVariable int payerId, @PathVariable int receiverId){
 
         return settlementService.settleUsers(payerId, receiverId);

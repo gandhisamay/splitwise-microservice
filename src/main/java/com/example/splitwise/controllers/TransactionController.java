@@ -27,25 +27,25 @@ public class TransactionController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<SplitTransactionResponse> getTransactionById(@PathVariable int id) {
         return transactionService.getTransactionById(id);
     }
 
     @PostMapping("/new")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> createTransaction(@RequestBody SplitTransactionRequest transactionRequest) {
         return transactionService.createTransaction(transactionRequest);
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> updateTransaction(@RequestBody SplitTransaction transaction) {
         return transactionService.updateTransaction(transaction);
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> deleteTransaction(@PathVariable  int id) {
         return transactionService.deleteTransaction(id);
     }
