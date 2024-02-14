@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<SplitUser, Integer> {
 
     Optional<SplitUser> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

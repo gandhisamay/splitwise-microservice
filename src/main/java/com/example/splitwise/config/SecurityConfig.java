@@ -55,13 +55,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> {
-            request.requestMatchers("/user/new").permitAll();
-            request.requestMatchers("/user/new/many").permitAll();
-            request.requestMatchers("/user/**").authenticated();
-            request.requestMatchers("/activity/**").authenticated();
-            request.requestMatchers("/transaction/**").authenticated();
-            request.requestMatchers("/settle/**").authenticated();
-        }).formLogin(Customizer.withDefaults()).build();
+        return http.httpBasic(AbstractHttpConfigurer::disable).
+                csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> {
+                    request.requestMatchers("/user/new").permitAll();
+                    request.requestMatchers("/user/new/many").permitAll();
+                    request.requestMatchers("/transaction/new/many").permitAll();
+                    request.requestMatchers("/transaction/new").permitAll();
+                    request.requestMatchers("/transaction/**").permitAll();
+                    request.requestMatchers("/user/**").authenticated();
+                    request.requestMatchers("/activity/**").authenticated();
+//                    request.requestMatchers("/transaction/**").authenticated();
+                    request.requestMatchers("/settle/**").authenticated();
+                }).formLogin(Customizer.withDefaults()).build();
     }
 }

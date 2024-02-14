@@ -62,6 +62,8 @@ public class SplitTransaction {
 
 public class SplitTransaction {
 
+    private int idempotencyKey;
+
     @Id
     @GeneratedValue
     private int transactionId;
@@ -79,6 +81,7 @@ public class SplitTransaction {
     private double amount;
     private int groupId;
     private String description;
+    private String category;
 
     // Getters and setters
 }

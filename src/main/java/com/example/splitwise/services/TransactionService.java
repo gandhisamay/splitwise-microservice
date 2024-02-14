@@ -6,6 +6,8 @@ import com.example.splitwise.models.*;
 import com.example.splitwise.repositories.MoneyBalanceRepository;
 import com.example.splitwise.repositories.TransactionRepository;
 import com.example.splitwise.repositories.UserRepository;
+import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,16 @@ public class TransactionService {
         return new ResponseEntity<>(failureResponse, HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<String> createTransaction(SplitTransactionRequest transactionRequest) {
+    @Transactional
+    public ResponseEntity<String> createTransaction(@NotNull SplitTransactionRequest transactionRequest) {
+        //need to make this design wayyy better
+        System.out.println(transactionRequest);
+        //check first if the transaction is already completed or not
+
+        boolean transactionExists = transactionRepository.existsByIdempotencyKey(transactionRequest.getIdempotencyKey());
+
+        if (transactionExists)
+            return ResponseEntity.ok().body("Transaction created successfully");
 
         SplitUser payer = userRepository.findById(transactionRequest.getPayerId()).orElseThrow(() -> new UserNotFoundException(10));
         List<SplitUser> participants = userRepository.findAllById(transactionRequest.getParticipantsAmounts().keySet());
@@ -56,13 +67,13 @@ public class TransactionService {
             return ResponseEntity.badRequest().body("Participants ids are invalid");
         }
 
-        Map<SplitUser, Double> updatedMap = transactionRequest.getParticipantsAmounts().entrySet().stream().collect(HashMap::new, (map, entry) -> map.put(userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey())), entry.getValue()), HashMap::putAll);
-
+        Map<SplitUser, Double> updatedMap = transactionRequest.getParticipantsAmounts().entrySet().parallelStream().collect(HashMap::new, (map, entry) -> map.put(userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey())), entry.getValue()), HashMap::putAll);
 
         participants.forEach((receiver) -> {
+
             //find if the entry exists
             SplitMoneyBalanceId direct = SplitMoneyBalanceId.builder().payerId(transactionRequest.getPayerId()).receiverId(receiver.getUserId()).build();
-            SplitMoneyBalanceId inverse = SplitMoneyBalanceId.builder().payerId(receiver.getUserId()).payerId(transactionRequest.getPayerId()).build();
+            SplitMoneyBalanceId inverse = SplitMoneyBalanceId.builder().payerId(receiver.getUserId()).receiverId(transactionRequest.getPayerId()).build();
 
 
             SplitMoneyBalance directBalance = moneyBalanceRepository.findById(direct).orElse(null);
@@ -86,7 +97,7 @@ public class TransactionService {
             }
         });
 
-        SplitTransaction transaction = SplitTransaction.builder().participantsAmounts(updatedMap).payer(payer).groupId(transactionRequest.getGroupId()).amount(transactionRequest.getAmount()).description(transactionRequest.getDescription()).build();
+        SplitTransaction transaction = SplitTransaction.builder().idempotencyKey(transactionRequest.getIdempotencyKey()).participantsAmounts(updatedMap).payer(payer).groupId(transactionRequest.getGroupId()).amount(transactionRequest.getAmount()).description(transactionRequest.getDescription()).build();
 
         transactionRepository.save(transaction);
 
@@ -111,7 +122,12 @@ public class TransactionService {
         boolean transactionExists = transactionRepository.existsById(transaction.getTransactionId());
         if (transactionExists) {
 
-            SplitTransaction updatedTransaction = SplitTransaction.builder().transactionId(transaction.getTransactionId()).amount(transaction.getAmount()).participantsAmounts(transaction.getParticipantsAmounts()).groupId(transaction.getGroupId()).build();
+            SplitTransaction updatedTransaction = SplitTransaction.builder()
+                    .idempotencyKey(transaction.getIdempotencyKey())
+                    .transactionId(transaction.getTransactionId())
+                    .amount(transaction.getAmount())
+                    .participantsAmounts(transaction.getParticipantsAmounts()).groupId(transaction.getGroupId())
+                    .build();
 
             transactionRepository.save(updatedTransaction);
             return new ResponseEntity<>("success", HttpStatus.OK);

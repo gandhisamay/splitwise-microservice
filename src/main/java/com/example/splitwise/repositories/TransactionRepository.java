@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<SplitTransaction, Integer> {
+
+    boolean existsByIdempotencyKey(int idempotencyKey);
 }
