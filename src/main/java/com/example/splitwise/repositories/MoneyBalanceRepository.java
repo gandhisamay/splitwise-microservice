@@ -1,7 +1,7 @@
 package com.example.splitwise.repositories;
 
-import com.example.splitwise.models.SplitMoneyBalance;
-import com.example.splitwise.models.SplitMoneyBalanceId;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalance;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalanceId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

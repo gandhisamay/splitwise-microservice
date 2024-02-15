@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/settle")
 public class SettlementController {
-
-
     private final SettlementService settlementService;
-
 
     SettlementController(SettlementService settlementService){
         this.settlementService = settlementService;

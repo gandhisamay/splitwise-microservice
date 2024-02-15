@@ -1,8 +1,8 @@
 package com.example.splitwise.controllers;
 
-import com.example.splitwise.models.SplitTransaction;
-import com.example.splitwise.models.SplitTransactionRequest;
-import com.example.splitwise.models.SplitTransactionResponse;
+import com.example.splitwise.models.transaction.SplitTransaction;
+import com.example.splitwise.models.transaction.SplitTransactionRequest;
+import com.example.splitwise.models.transaction.SplitTransactionResponse;
 import com.example.splitwise.services.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,12 +34,13 @@ public class TransactionController {
     }
 
     @PostMapping("/new")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> createTransaction(@RequestBody SplitTransactionRequest transactionRequest) {
         return transactionService.createTransaction(transactionRequest);
     }
 
     @PostMapping("/new/many")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> createManyTransactions(@RequestBody List<SplitTransactionRequest> transactionRequests) {
         transactionRequests.stream().forEach(transactionService::createTransaction);
         return ResponseEntity.created(URI.create("transactionscreated")).body("Transactions created successfully");

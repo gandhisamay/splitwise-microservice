@@ -1,4 +1,4 @@
-package com.example.splitwise.models;
+package com.example.splitwise.models.transaction;
 
 import lombok.Builder;
 import lombok.Data;

@@ -3,17 +3,20 @@ package com.example.splitwise.services;
 
 import com.example.splitwise.exceptions.UserNotFoundException;
 import com.example.splitwise.models.*;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalance;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalanceId;
+import com.example.splitwise.models.transaction.SplitTransaction;
+import com.example.splitwise.models.transaction.SplitTransactionRequest;
+import com.example.splitwise.models.transaction.SplitTransactionResponse;
 import com.example.splitwise.repositories.MoneyBalanceRepository;
 import com.example.splitwise.repositories.TransactionRepository;
 import com.example.splitwise.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -49,7 +52,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public ResponseEntity<String> createTransaction(@NotNull SplitTransactionRequest transactionRequest) {
+    public ResponseEntity<String> createTransaction(SplitTransactionRequest transactionRequest) {
         //need to make this design wayyy better
         System.out.println(transactionRequest);
         //check first if the transaction is already completed or not

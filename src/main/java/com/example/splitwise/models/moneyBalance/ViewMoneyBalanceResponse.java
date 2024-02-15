@@ -1,4 +1,4 @@
-package com.example.splitwise.models;
+package com.example.splitwise.models.moneyBalance;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

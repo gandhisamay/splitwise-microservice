@@ -1,6 +1,6 @@
 package com.example.splitwise.controllers;
 
-import com.example.splitwise.models.ViewMoneyBalanceResponse;
+import com.example.splitwise.models.moneyBalance.ViewMoneyBalanceResponse;
 import com.example.splitwise.services.ViewService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

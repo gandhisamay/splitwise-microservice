@@ -1,6 +1,5 @@
 package com.example.splitwise.config;
 
-import com.example.splitwise.models.SplitUserDetails;
 import com.example.splitwise.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,9 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,8 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.example.splitwise.services.UserAuthService;
 
 @Configuration
@@ -29,9 +25,11 @@ import com.example.splitwise.services.UserAuthService;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    SecurityConfig(UserRepository userRepository) {
+    SecurityConfig(UserRepository userRepository, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.userRepository = userRepository;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 
     @Bean
@@ -53,19 +51,28 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http)
+            throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(new UserAuthService(userRepository)).passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http.httpBasic(AbstractHttpConfigurer::disable).
+        http.
                 csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> {
                     request.requestMatchers("/user/new").permitAll();
                     request.requestMatchers("/user/new/many").permitAll();
-                    request.requestMatchers("/transaction/new/many").permitAll();
-                    request.requestMatchers("/transaction/new").permitAll();
-                    request.requestMatchers("/transaction/**").permitAll();
+                    request.requestMatchers("/auth/login").permitAll();
+                    request.requestMatchers("/auth/**").authenticated();
                     request.requestMatchers("/user/**").authenticated();
                     request.requestMatchers("/activity/**").authenticated();
-//                    request.requestMatchers("/transaction/**").authenticated();
+                    request.requestMatchers("/transaction/**").authenticated();
                     request.requestMatchers("/settle/**").authenticated();
-                }).formLogin(Customizer.withDefaults()).build();
+                }).sessionManagement(Customizer.withDefaults()).addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

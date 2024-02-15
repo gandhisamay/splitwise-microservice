@@ -1,8 +1,8 @@
 package com.example.splitwise.services;
 
 import com.example.splitwise.exceptions.TransactionDoesNotExistBetweenUsersException;
-import com.example.splitwise.models.SplitMoneyBalance;
-import com.example.splitwise.models.SplitMoneyBalanceId;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalance;
+import com.example.splitwise.models.moneyBalance.SplitMoneyBalanceId;
 import com.example.splitwise.repositories.MoneyBalanceRepository;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
@@ -33,14 +33,19 @@ public class SettlementService {
 
         if (balance != null) {
             //directly check it
-            if (balance.getAmount() < 0)
+            if (balance.getAmount() <= 0)
                 return ResponseEntity.badRequest().body("Payer does not owe any money to the receiver");
 
             balance.setAmount(0);
             moneyBalanceRepository.save(balance);
-        }
-        else{
+        } else {
             balance = moneyBalanceRepository.findById(reverse).orElseThrow(() -> new TransactionDoesNotExistBetweenUsersException(payerId, receiverId));
+
+            if (balance.getAmount() >= 0)
+                return ResponseEntity.badRequest().body("Payer does not owe any money to the receiver");
+
+            balance.setAmount(0);
+            moneyBalanceRepository.save(balance);
         }
 
 

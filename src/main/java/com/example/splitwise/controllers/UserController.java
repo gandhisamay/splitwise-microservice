@@ -5,6 +5,7 @@ import com.example.splitwise.models.SplitUser;
 import com.example.splitwise.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,11 +29,13 @@ public class UserController {
     }
 
     @PostMapping(value = "/new")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public ResponseEntity<String> createUser(@RequestBody SplitUser user) {
         return userService.createUser(user);
     }
 
     @PostMapping(value = "/new/many")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> createManyUsers(@RequestBody List<SplitUser> users) {
         return userService.createManyUsers(users);
     }

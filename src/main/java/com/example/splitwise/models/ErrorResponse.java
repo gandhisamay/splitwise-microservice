@@ -1,6 +1,7 @@
 package com.example.splitwise.models;
 
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
-public record ErrorResponse(int statusCode, String message) {
+public record ErrorResponse(HttpStatus statusCode, String message) {
 }
