@@ -37,7 +37,7 @@ public class SplitTransaction {
     private Map<SplitUser, Double> participantsAmounts;
 
 /*    @OneToMany(cascade = CascadeType.ALL, fetch =  FetchType.LAZY)
-    @JoinColumn(name = "transaction_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<SplitUserAmount> amounts;*/
 
     private double amount;

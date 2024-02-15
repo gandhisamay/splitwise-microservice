@@ -72,8 +72,8 @@ public class TransactionService {
         participants.forEach((receiver) -> {
 
             //find if the entry exists
-            SplitMoneyBalanceId direct = SplitMoneyBalanceId.builder().payerId(transactionRequest.getPayerId()).receiverId(receiver.getUserId()).build();
-            SplitMoneyBalanceId inverse = SplitMoneyBalanceId.builder().payerId(receiver.getUserId()).receiverId(transactionRequest.getPayerId()).build();
+            SplitMoneyBalanceId direct = SplitMoneyBalanceId.builder().payerId(transactionRequest.getPayerId()).receiverId(receiver.getUserId()).groupId(transactionRequest.getGroupId()).build();
+            SplitMoneyBalanceId inverse = direct.getReverseMapping();
 
 
             SplitMoneyBalance directBalance = moneyBalanceRepository.findById(direct).orElse(null);
@@ -85,7 +85,7 @@ public class TransactionService {
             if (directBalance == null && reverseBalance == null) {
 
                 //we need to create here
-                SplitMoneyBalance newBalance = SplitMoneyBalance.builder().amount(amountOwed).payer(payer).moneyBalanceId(new SplitMoneyBalanceId(payer.getUserId(), receiver.getUserId())).receiver(receiver).build();
+                SplitMoneyBalance newBalance = SplitMoneyBalance.builder().amount(amountOwed).payer(payer).moneyBalanceId(new SplitMoneyBalanceId(payer.getUserId(), receiver.getUserId(), transactionRequest.getGroupId())).receiver(receiver).build();
                 moneyBalanceRepository.save(newBalance);
 
             } else if (reverseBalance != null) {

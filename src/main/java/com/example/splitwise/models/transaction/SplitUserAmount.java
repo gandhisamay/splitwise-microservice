@@ -2,9 +2,7 @@ package com.example.splitwise.models.transaction;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +16,8 @@ import lombok.NoArgsConstructor;
 public class SplitUserAmount {
 /*    @Id
     @GeneratedValue
-    private int transactionId;*/
+    @Column(name = "id")
+    private int id;*/
 
     private int userId;
     private String name;

@@ -22,8 +22,10 @@ public class SplitMoneyBalanceId implements Serializable {
     @Column(name = "receiver_id")
     private int receiverId;
 
+    @Column(name = "group_id")
+    private int groupId;
 
-    public SplitMoneyBalanceId getReverseMapping(){
-       return SplitMoneyBalanceId.builder().receiverId(this.payerId).payerId(this.receiverId).build();
+    public SplitMoneyBalanceId getReverseMapping() {
+        return SplitMoneyBalanceId.builder().receiverId(this.payerId).payerId(this.receiverId).groupId(this.groupId).build();
     }
 }

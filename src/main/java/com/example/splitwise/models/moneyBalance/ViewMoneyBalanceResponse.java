@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class ViewMoneyBalanceResponse {
 
-    private Map<String, Double> moneyBalances;
-    private String message;
-    private HttpStatus status;
+    private String name;
+    private double amount;
+    private int groupId;
 }

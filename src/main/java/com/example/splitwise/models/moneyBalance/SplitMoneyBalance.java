@@ -1,5 +1,6 @@
 package com.example.splitwise.models.moneyBalance;
 
+import com.example.splitwise.models.group.SplitGroup;
 import com.example.splitwise.models.user.SplitUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Entity
 public class SplitMoneyBalance implements Serializable {
     @EmbeddedId
-    private  SplitMoneyBalanceId moneyBalanceId;
+    private SplitMoneyBalanceId moneyBalanceId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "payer_id", insertable = false, updatable = false, referencedColumnName = "user_id")
@@ -27,6 +28,10 @@ public class SplitMoneyBalance implements Serializable {
     @JoinColumn(name = "receiver_id", insertable = false, updatable = false, referencedColumnName = "user_id")
     private SplitUser receiver;
 
-    private double amount;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id", insertable = false, updatable = false, referencedColumnName = "group_id")
+    private SplitGroup group;
+
+    private double amount;
 }

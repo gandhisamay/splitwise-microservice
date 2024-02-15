@@ -1,0 +1,11 @@
+package com.example.splitwise.repositories;
+
+
+import com.example.splitwise.models.group.SplitGroup;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface GroupRepository extends JpaRepository<SplitGroup, Integer> {
+
+}
