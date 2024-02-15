@@ -57,7 +57,7 @@ public class GroupService {
         SplitGroup updatedGroup = groupRequestParser(splitGroupRequest);
         updatedGroup.setGroupId(splitGroupRequest.getId());
         groupRepository.save(updatedGroup);
-        return ResponseEntity.created(URI.create("groupcreated")).body("Group created successfully");
+        return ResponseEntity.created(URI.create("groupcreated")).body("Group updated successfully");
     }
 
     public ResponseEntity<String> deleteGroup(int groupId) {

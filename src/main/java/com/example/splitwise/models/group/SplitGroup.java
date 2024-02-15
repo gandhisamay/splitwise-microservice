@@ -21,7 +21,7 @@ public class SplitGroup {
     private int groupId;
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
    // @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private List<SplitUser> groupMembers;
 }

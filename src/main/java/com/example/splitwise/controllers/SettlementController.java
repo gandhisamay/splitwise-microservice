@@ -19,10 +19,9 @@ public class SettlementController {
     }
 
 
-    @PostMapping("/{payerId}/{receiverId}")
+    @PostMapping("/{groupId}/{payerId}/{receiverId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public ResponseEntity<String> settleUsers(@PathVariable int payerId, @PathVariable int receiverId){
-
-        return settlementService.settleUsers(payerId, receiverId);
+    public ResponseEntity<String> settleUsers(@PathVariable int groupId, @PathVariable int payerId, @PathVariable int receiverId){
+        return settlementService.settleUsers(groupId, payerId, receiverId);
     }
 }

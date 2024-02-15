@@ -68,6 +68,7 @@ public class SecurityConfig {
                     request.requestMatchers("/activity/**").authenticated();
                     request.requestMatchers("/transaction/**").authenticated();
                     request.requestMatchers("/settle/**").authenticated();
+                    request.requestMatchers("/group/**").authenticated();
                 }).sessionManagement(Customizer.withDefaults()).addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

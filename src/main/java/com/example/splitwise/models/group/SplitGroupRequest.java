@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class SplitGroupRequest {
-   private int id;
+   private Integer id;
    private String name;
    private List<Integer> groupMembers;
 }

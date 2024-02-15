@@ -21,10 +21,10 @@ public class SettlementService {
     }
 
     @Transactional
-    public ResponseEntity<String> settleUsers(int payerId, int receiverId) throws TransactionDoesNotExistBetweenUsersException {
+    public ResponseEntity<String> settleUsers(int groupId, int payerId, int receiverId) throws TransactionDoesNotExistBetweenUsersException {
         //now we need to settle them
 
-        SplitMoneyBalanceId id = SplitMoneyBalanceId.builder().payerId(payerId).receiverId(receiverId).build();
+        SplitMoneyBalanceId id = SplitMoneyBalanceId.builder().payerId(payerId).receiverId(receiverId).groupId(groupId).build();
         SplitMoneyBalanceId reverse = id.getReverseMapping();
 
         //now we have it ready ..just check for existence

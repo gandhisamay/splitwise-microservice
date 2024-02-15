@@ -10,6 +10,7 @@ import com.example.splitwise.models.user.SplitUser;
 import com.example.splitwise.models.transaction.SplitTransactionRequest;
 import com.example.splitwise.models.transaction.SplitTransactionResponse;
 import com.example.splitwise.models.user.SplitUserCompressed;
+import com.example.splitwise.repositories.GroupRepository;
 import com.example.splitwise.repositories.MoneyBalanceRepository;
 import com.example.splitwise.repositories.TransactionRepository;
 import com.example.splitwise.repositories.UserRepository;
@@ -27,12 +28,15 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
+    private final GroupRepository groupRepository;
+
     private final MoneyBalanceRepository moneyBalanceRepository;
 
-    TransactionService(TransactionRepository transactionRepository, UserRepository userRepository, MoneyBalanceRepository moneyBalanceRepository) {
+    TransactionService(TransactionRepository transactionRepository, UserRepository userRepository, MoneyBalanceRepository moneyBalanceRepository, GroupRepository groupRepository) {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.moneyBalanceRepository = moneyBalanceRepository;
+        this.groupRepository = groupRepository;
     }
 
     public ResponseEntity<List<SplitTransactionResponse>> getAllTransactions() {
@@ -65,6 +69,12 @@ public class TransactionService {
 
         if (participants.size() != transactionRequest.getParticipantsAmounts().size()) {
             return ResponseEntity.badRequest().body("Participants ids are invalid");
+        }
+
+        boolean groupExists = groupRepository.existsById(transactionRequest.getGroupId());
+
+        if(!groupExists){
+            return ResponseEntity.badRequest().body("Group does not exist");
         }
 
         Map<SplitUser, Double> updatedMap = transactionRequest.getParticipantsAmounts().entrySet().parallelStream().collect(HashMap::new, (map, entry) -> map.put(userRepository.findById(entry.getKey()).orElseThrow(() -> new UserNotFoundException(entry.getKey())), entry.getValue()), HashMap::putAll);
