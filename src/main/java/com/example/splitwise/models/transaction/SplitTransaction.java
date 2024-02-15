@@ -1,13 +1,15 @@
 package com.example.splitwise.models.transaction;
 
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.w3c.dom.stylesheets.LinkStyle;
 
+import java.util.List;
 import java.util.Map;
 
 @Builder
@@ -33,6 +35,10 @@ public class SplitTransaction {
     @MapKeyJoinColumn(name = "participant_id", referencedColumnName = "user_id")
     @Column(name = "amount_owed")
     private Map<SplitUser, Double> participantsAmounts;
+
+/*    @OneToMany(cascade = CascadeType.ALL, fetch =  FetchType.LAZY)
+    @JoinColumn(name = "transaction_id", referencedColumnName = "user_id")
+    private List<SplitUserAmount> amounts;*/
 
     private double amount;
     private int groupId;

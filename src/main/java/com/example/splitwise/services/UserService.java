@@ -1,7 +1,8 @@
 package com.example.splitwise.services;
 
 import com.example.splitwise.exceptions.UserNotFoundException;
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
+import com.example.splitwise.models.user.SplitUserCompressed;
 import com.example.splitwise.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,11 @@ public class UserService {
     public ResponseEntity<List<SplitUser>> getAllUsers() {
         List<SplitUser> users = userRepository.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    public ResponseEntity<SplitUser> getUserById(int userId) {
+        SplitUser user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return ResponseEntity.ok().body(user);
     }
 
     public ResponseEntity<String> createUser(SplitUser user) {

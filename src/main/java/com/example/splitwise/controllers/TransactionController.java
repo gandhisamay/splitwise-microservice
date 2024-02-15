@@ -1,5 +1,6 @@
 package com.example.splitwise.controllers;
 
+import com.example.splitwise.exceptions.TransactionNotFoundException;
 import com.example.splitwise.models.transaction.SplitTransaction;
 import com.example.splitwise.models.transaction.SplitTransactionRequest;
 import com.example.splitwise.models.transaction.SplitTransactionResponse;
@@ -22,14 +23,14 @@ public class TransactionController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<SplitTransaction>> getAllTransactions() {
+    public ResponseEntity<List<SplitTransactionResponse>> getAllTransactions() {
         return transactionService.getAllTransactions();
     }
 
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public ResponseEntity<SplitTransactionResponse> getTransactionById(@PathVariable int id) {
+    public ResponseEntity<SplitTransactionResponse> getTransactionById(@PathVariable int id) throws TransactionNotFoundException{
         return transactionService.getTransactionById(id);
     }
 

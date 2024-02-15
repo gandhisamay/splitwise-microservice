@@ -1,8 +1,8 @@
 package com.example.splitwise.services;
 
 
-import com.example.splitwise.models.SplitUser;
-import com.example.splitwise.models.SplitUserDetails;
+import com.example.splitwise.models.user.SplitUser;
+import com.example.splitwise.models.user.SplitUserDetails;
 import com.example.splitwise.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

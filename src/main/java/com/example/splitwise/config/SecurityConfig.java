@@ -63,10 +63,7 @@ public class SecurityConfig {
 
         http.
                 csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> {
-                    request.requestMatchers("/user/new").permitAll();
-                    request.requestMatchers("/user/new/many").permitAll();
-                    request.requestMatchers("/auth/login").permitAll();
-                    request.requestMatchers("/auth/**").authenticated();
+                    request.requestMatchers("/auth/**").permitAll();
                     request.requestMatchers("/user/**").authenticated();
                     request.requestMatchers("/activity/**").authenticated();
                     request.requestMatchers("/transaction/**").authenticated();

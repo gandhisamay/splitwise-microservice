@@ -1,4 +1,4 @@
-package com.example.splitwise.models;
+package com.example.splitwise.models.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

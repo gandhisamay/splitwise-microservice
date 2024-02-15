@@ -1,7 +1,7 @@
 package com.example.splitwise.controllers;
 
 
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
 import com.example.splitwise.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +27,14 @@ public class UserController {
     public ResponseEntity<List<SplitUser>> getAllUsers() {
         return userService.getAllUsers();
     }
+
+
+    @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<SplitUser> getUserById(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+
 
     @PostMapping(value = "/new")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")

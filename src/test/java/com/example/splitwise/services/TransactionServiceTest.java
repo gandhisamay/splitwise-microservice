@@ -1,7 +1,7 @@
 package com.example.splitwise.services;
 
 import com.example.splitwise.models.transaction.SplitTransaction;
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
 import com.example.splitwise.repositories.TransactionRepository;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;

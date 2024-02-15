@@ -1,6 +1,6 @@
 package com.example.splitwise.models.moneyBalance;
 
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

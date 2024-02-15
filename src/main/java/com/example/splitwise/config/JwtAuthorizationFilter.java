@@ -1,7 +1,7 @@
 package com.example.splitwise.config;
 
 import com.example.splitwise.exceptions.UserNotFoundException;
-import com.example.splitwise.models.SplitUser;
+import com.example.splitwise.models.user.SplitUser;
 import com.example.splitwise.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;

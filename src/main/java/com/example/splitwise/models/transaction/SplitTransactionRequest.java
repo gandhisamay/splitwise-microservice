@@ -11,4 +11,5 @@ public class SplitTransactionRequest {
    private double amount;
    private int groupId;
    private String description;
+   private  String category;
 }

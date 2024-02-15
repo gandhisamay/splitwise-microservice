@@ -1,4 +1,4 @@
-package com.example.splitwise.models;
+package com.example.splitwise.models.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

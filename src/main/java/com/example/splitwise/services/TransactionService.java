@@ -1,13 +1,15 @@
 package com.example.splitwise.services;
 
-
+import com.example.splitwise.exceptions.TransactionNotFoundException;
 import com.example.splitwise.exceptions.UserNotFoundException;
-import com.example.splitwise.models.*;
 import com.example.splitwise.models.moneyBalance.SplitMoneyBalance;
 import com.example.splitwise.models.moneyBalance.SplitMoneyBalanceId;
 import com.example.splitwise.models.transaction.SplitTransaction;
+import com.example.splitwise.models.transaction.SplitUserAmount;
+import com.example.splitwise.models.user.SplitUser;
 import com.example.splitwise.models.transaction.SplitTransactionRequest;
 import com.example.splitwise.models.transaction.SplitTransactionResponse;
+import com.example.splitwise.models.user.SplitUserCompressed;
 import com.example.splitwise.repositories.MoneyBalanceRepository;
 import com.example.splitwise.repositories.TransactionRepository;
 import com.example.splitwise.repositories.UserRepository;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -32,23 +35,17 @@ public class TransactionService {
         this.moneyBalanceRepository = moneyBalanceRepository;
     }
 
-    public ResponseEntity<List<SplitTransaction>> getAllTransactions() {
+    public ResponseEntity<List<SplitTransactionResponse>> getAllTransactions() {
         List<SplitTransaction> transactions = transactionRepository.findAll();
-        return new ResponseEntity<>(transactions, HttpStatus.OK);
+
+        List<SplitTransactionResponse> response = transactions.stream().map(SplitTransactionResponse::toDto).collect(Collectors.toList());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<SplitTransactionResponse> getTransactionById(int id) {
-        Optional<SplitTransaction> transaction = transactionRepository.findById(id);
-
-        if (transaction.isPresent()) {
-
-            SplitTransactionResponse successResponse = SplitTransactionResponse.builder().transaction(transaction.get()).message("success").build();
-            return new ResponseEntity<>(successResponse, HttpStatus.OK);
-        }
-
-        SplitTransactionResponse failureResponse = SplitTransactionResponse.builder().message("no transaction with this id exists").build();
-
-        return new ResponseEntity<>(failureResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<SplitTransactionResponse> getTransactionById(int id) throws TransactionNotFoundException {
+        SplitTransaction transaction = transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id));
+        SplitTransactionResponse successResponse = SplitTransactionResponse.toDto(transaction);
+        return ResponseEntity.ok().body(successResponse);
     }
 
     @Transactional
@@ -62,7 +59,7 @@ public class TransactionService {
         if (transactionExists)
             return ResponseEntity.ok().body("Transaction created successfully");
 
-        SplitUser payer = userRepository.findById(transactionRequest.getPayerId()).orElseThrow(() -> new UserNotFoundException(10));
+        SplitUser payer = userRepository.findById(transactionRequest.getPayerId()).orElseThrow(() -> new UserNotFoundException(transactionRequest.getPayerId()));
         List<SplitUser> participants = userRepository.findAllById(transactionRequest.getParticipantsAmounts().keySet());
 
 
@@ -100,7 +97,7 @@ public class TransactionService {
             }
         });
 
-        SplitTransaction transaction = SplitTransaction.builder().idempotencyKey(transactionRequest.getIdempotencyKey()).participantsAmounts(updatedMap).payer(payer).groupId(transactionRequest.getGroupId()).amount(transactionRequest.getAmount()).description(transactionRequest.getDescription()).build();
+        SplitTransaction transaction = SplitTransaction.builder().idempotencyKey(transactionRequest.getIdempotencyKey()).participantsAmounts(updatedMap).payer(payer).groupId(transactionRequest.getGroupId()).amount(transactionRequest.getAmount()).description(transactionRequest.getDescription()).category(transactionRequest.getCategory()).build();
 
         transactionRepository.save(transaction);
 
