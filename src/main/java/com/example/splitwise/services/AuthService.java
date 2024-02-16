@@ -35,7 +35,13 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
+    public ResponseEntity signUp(SignUpRequest signUpRequest) {
+        boolean userExists = userRepository.existsByEmail(signUpRequest.getEmail());
+
+        if(userExists){
+            return ResponseEntity.badRequest().body("User already exists, please login");
+        }
+
         //create the user here
         SplitUser user = SplitUser.builder().email(signUpRequest.getEmail()).name(signUpRequest.getName()).password(passwordEncoder.encode(signUpRequest.getPassword())).roles("ROLE_ADMIN,ROLE_USER").build();
         //now save this user

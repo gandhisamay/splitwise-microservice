@@ -4,6 +4,7 @@ import com.example.splitwise.exceptions.TransactionNotFoundException;
 import com.example.splitwise.models.transaction.SplitTransaction;
 import com.example.splitwise.models.transaction.SplitTransactionRequest;
 import com.example.splitwise.models.transaction.SplitTransactionResponse;
+import com.example.splitwise.models.transaction.SplitTransactionUpdateRequest;
 import com.example.splitwise.services.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,8 +50,8 @@ public class TransactionController {
 
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public ResponseEntity<String> updateTransaction(@RequestBody SplitTransaction transaction) {
-        return transactionService.updateTransaction(transaction);
+    public ResponseEntity<String> updateTransaction(@RequestBody SplitTransactionUpdateRequest transactionUpdateRequest) {
+        return transactionService.updateTransaction(transactionUpdateRequest);
     }
 
     @DeleteMapping("/delete/{id}")

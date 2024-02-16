@@ -19,6 +19,7 @@ public class SplitTransactionResponse {
     private String category;
     private String description;
     private int groupId;
+    private double amount;
 
 
     public static SplitTransactionResponse toDto(SplitTransaction transaction) {
@@ -33,6 +34,7 @@ public class SplitTransactionResponse {
                 .category(transaction.getCategory())
                 .description(transaction.getDescription())
                 .groupId(transaction.getGroupId())
+                .amount(transaction.getAmount())
                 .build();
     }
 }
